@@ -1,21 +1,6 @@
-# bun-react-template
+# Rust-Chip-8-Emulator
+Personal project done as a way to regain my familiarity with Rust and to prepare for my Bachelor's final project - a GBA Emulator.
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-To start a development server:
-
-```bash
-bun dev
-```
-
-To run for production:
-
-```bash
-bun start
-```
-
-This project was created using `bun init` in bun v1.3.14. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+# Resources
+- https://tobiasvl.github.io/blog/write-a-chip-8-emulator/#8xy0-set
+- http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
