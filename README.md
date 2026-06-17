@@ -7,7 +7,8 @@ Chip-8 Emulator written 100% in Rust that runs in the browser through WebAssembl
 # What I learned
 - Basic idea of how an emulator is written
 - Rust
-- Tried to apply SOLID principles when writing stuff 
+- Tried to apply SOLID principles when writing stuff
+- Basic idea of how WASM (wasm-pack and wasm-bindgen) is used to compile Rust code for browsers
 
 # Resources
 
