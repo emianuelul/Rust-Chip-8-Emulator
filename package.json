@@ -1,7 +1,7 @@
 {
   "name": "bun-react-template",
   "version": "0.1.0",
-  "homepage": "https://github.com/emianuelul/Rust-Chip-8-Emulator",
+  "homepage": "https://emianuelul.github.io/Rust-Chip-8-Emulator/",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
     "start": "NODE_ENV=production bun src/index.ts",
     "deploy": "gh-pages -d dist",
-    "predeploy": "bun run build"
+    "predeploy": "bun run build && cp public/rust_test_bg.wasm dist/"
   },
   "dependencies": {
     "react": "^19",
