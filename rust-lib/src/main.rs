@@ -21,7 +21,7 @@ const TESTS: [&str; 8] = [
 fn main() -> Result<(), String> {
     let mut engine: Chip8Engine = Chip8Engine::new(true);
 
-    engine.load_rom(TESTS[1]);
+    engine.load_rom(TESTS[6]);
 
     let delta: f32 = 1f32 / FPS as f32;
 

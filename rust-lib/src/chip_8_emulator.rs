@@ -66,8 +66,8 @@ impl Chip8Engine {
         result
     }
 
-    fn load_bytes(&mut self, data: &[u8]) {
-        for (offset, byte) in (0x200..).zip(data.iter()) {
+    pub fn load_bytes(&mut self, data: &[u8]) {
+        for (offset, byte) in (0x200..).zip(data.iter().take(4096 - 0x200)) {
             self.memory[offset] = *byte;
         }
     }

@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "react": "^19",
-    "react-dom": "^19"
+    "react-dom": "^19",
+    "chip8-engine": "file:rust-lib/pkg"
   },
   "devDependencies": {
     "@types/react": "^19",
