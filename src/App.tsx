@@ -58,7 +58,7 @@ export function App() {
       };
 
     const startEmulator = async () => {
-      await init("/rust_test_bg.wasm");
+      await init("./rust_test_bg.wasm");
       
       engineRef.current = Chip8Engine.new(oldEngine);
 
