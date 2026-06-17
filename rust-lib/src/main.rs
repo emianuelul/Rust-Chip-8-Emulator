@@ -15,7 +15,7 @@ const TESTS: [&str; 8] = [
     "../chip-8_tests/5-quirks.ch8",
     "../chip-8_tests/6-keypad.ch8",
     "../chip-8_tests/7-beep.ch8",
-    "../chip-8_tests/8-scrolling.ch8"
+    "../chip-8_tests/8-scrolling.ch8",
 ];
 
 fn main() -> Result<(), String> {
@@ -30,7 +30,7 @@ fn main() -> Result<(), String> {
     loop {
         engine.tick()?;
 
-        if now.elapsed().as_secs_f32() >= delta  {
+        if now.elapsed().as_secs_f32() >= delta {
             engine.set_delay_timer(engine.get_delay_timer().saturating_sub(1));
             engine.set_sound_timer(engine.get_sound_timer().saturating_sub(1));
 
@@ -41,7 +41,11 @@ fn main() -> Result<(), String> {
             for i in 0..SCREEN_HEIGHT {
                 for j in 0..SCREEN_WIDTH {
                     let curr_2d_arr_index: usize = i * SCREEN_WIDTH + j;
-                    let display_char: char = if engine.get_display()[curr_2d_arr_index] == 1 { '#' } else { '.' };
+                    let display_char: char = if engine.get_display()[curr_2d_arr_index] == 1 {
+                        '#'
+                    } else {
+                        '.'
+                    };
                     print!("{} ", display_char);
                 }
                 println!();

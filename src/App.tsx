@@ -9,15 +9,57 @@ export function App() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
 
+  const keymap: Record<string, number> = {
+    "1": 0,
+    "2": 1,
+    "3": 2,
+    "4": 3,
+    "q": 4,
+    "w": 5,
+    "e": 6,
+    "r": 7,
+    "a": 8,
+    "s": 9,
+    "d": 10,
+    "f": 11,
+    "z": 12,
+    "x": 13,
+    "c": 14,
+    "v": 15,
+  }
+
   const SCREEN_WIDTH = 64;
   const SCREEN_HEIGHT = 32;
   const CANVAS_MULTIPLIER = 10;
 
+  const oldEngine = false;
+
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape"){
+          engineRef.current = Chip8Engine.new(oldEngine);
+          return;
+        }
+
+        const value = keymap[e.key];
+        if (value === undefined) return;
+        engineRef.current?.press_key(value);
+      }
+
+      const handleKeyUp = (e: KeyboardEvent) => {
+        if (keymap[e.key] === undefined){
+          return;
+        }
+
+        const value = keymap[e.key];
+        if (value === undefined) return;
+        engineRef.current?.release_key(value);
+      };
+
     const startEmulator = async () => {
       await init("/rust_test_bg.wasm");
       
-      engineRef.current = Chip8Engine.new(true);
+      engineRef.current = Chip8Engine.new(oldEngine);
 
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -25,10 +67,19 @@ export function App() {
       canvas.width = SCREEN_WIDTH * CANVAS_MULTIPLIER;
       canvas.height = SCREEN_HEIGHT * CANVAS_MULTIPLIER;
 
+      window.addEventListener('keydown', handleKeyDown);
+
+      window.addEventListener('keyup', handleKeyUp);
+
       console.log("Finished loading emulator");
     };
 
     startEmulator();
+
+    return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('keyup', handleKeyUp);
+    };
   }, []); 
 
   const initAudio = () => {
@@ -55,7 +106,7 @@ export function App() {
 
   const renderLoop = () => {
     if (engineRef.current) {
-      for(let i = 0; i < 9; i++){
+      for(let i = 0; i < 15; i++){
         engineRef.current.tick();
       }
       
@@ -115,7 +166,7 @@ export function App() {
     const romBytes = new Uint8Array(buffer);
 
     if (engineRef.current) {
-      engineRef.current = Chip8Engine.new(false);
+      engineRef.current = Chip8Engine.new(oldEngine);
       engineRef.current.load_bytes(romBytes);
       console.log("Finished loading ROM!");
       
@@ -125,6 +176,8 @@ export function App() {
       }
     }
   };
+
+  
 
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "50px", flexDirection: "column" }}>

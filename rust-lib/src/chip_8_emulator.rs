@@ -24,7 +24,7 @@ const FONT_SET: [u8; 80] = [
     0xE0, 0x90, 0x90, 0x90, 0xE0, // D
     0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
     0xF0, 0x80, 0xF0, 0x80, 0x80, // F
-    // 0x1FF
+          // 0x1FF
 ];
 
 #[wasm_bindgen]
@@ -286,7 +286,8 @@ impl Chip8Engine {
 
                 self.registers[0xF] = 0;
                 for height_y in 0..height {
-                    let row: u8 = self.memory[(self.index + height_y as u16) as usize];
+                    let addr = ((self.index + height_y as u16) as usize) % 4096;
+                    let row: u8 = self.memory[addr];
                     let curr_y: u8 = y + height_y;
 
                     if curr_y == SCREEN_HEIGHT as u8 {
@@ -302,12 +303,13 @@ impl Chip8Engine {
                             break;
                         }
 
-                        let curr_2darr_index: usize = (curr_y as u16 * SCREEN_WIDTH as u16 + curr_x as u16) as usize;
+                        let curr_2darr_index: usize =
+                            (curr_y as u16 * SCREEN_WIDTH as u16 + curr_x as u16) as usize;
 
                         if self.display[curr_2darr_index] && curr_bit {
                             self.display[curr_2darr_index] = false;
                             self.registers[0xF] = 1;
-                        } else if !self.display[curr_y as usize] && curr_bit {
+                        } else if !self.display[curr_2darr_index] && curr_bit {
                             self.display[curr_2darr_index] = true;
                         }
                     }
@@ -475,7 +477,9 @@ impl Chip8Engine {
     }
 
     pub fn get_display(&self) -> Vec<u8> {
-        self.display.iter().map(|&pixel| if pixel {1} else {0}).collect()
+        self.display
+            .iter()
+            .map(|&pixel| if pixel { 1 } else { 0 })
+            .collect()
     }
-
 }
