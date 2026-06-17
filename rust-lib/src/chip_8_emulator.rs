@@ -1,5 +1,7 @@
-use std::io::{Error, ErrorKind};
 use rand::RngExt;
+use std::fs::File;
+use std::io::Read;
+use wasm_bindgen::prelude::wasm_bindgen;
 
 pub const SCREEN_WIDTH: usize = 64;
 pub const SCREEN_HEIGHT: usize = 32;
@@ -25,32 +27,34 @@ const FONT_SET: [u8; 80] = [
     // 0x1FF
 ];
 
+#[wasm_bindgen]
 pub struct Chip8Engine {
-    pub memory: [u8; 4096],
-    pub program_counter: u16,
-    pub registers: [u8; 16],  // 0xV0 - 0xVF
-    pub keyboard: [bool; 16], // true - held, false - released
-    pub key_pressed: (bool, u8),
-    pub index: u16,
-    pub stack: Vec<u16>,
-    pub display: [[bool; 64]; 32],
-    pub delay_timer: u8,
-    pub sound_timer: u8,
-    pub old: bool,
-    pub draw: bool,
+    memory: Vec<u8>,
+    program_counter: u16,
+    registers: Vec<u8>,  // 0xV0 - 0xVF
+    keyboard: Vec<bool>, // true - held, false - released
+    key_pressed: (bool, u8),
+    index: u16,
+    stack: Vec<u16>,
+    display: Vec<bool>,
+    delay_timer: u8,
+    sound_timer: u8,
+    old: bool,
+    draw: bool,
 }
 
+#[wasm_bindgen]
 impl Chip8Engine {
     pub fn new(old: bool) -> Self {
         let mut result = Chip8Engine {
-            memory: [0; 4096],
+            memory: [0; 4096].to_vec(),
             program_counter: 0x200,
-            registers: [0; 16],
-            keyboard: [false; 16],
+            registers: [0; 16].to_vec(),
+            keyboard: [false; 16].to_vec(),
             key_pressed: (false, 0),
             index: 0,
             stack: Vec::new(),
-            display: [[false; SCREEN_WIDTH]; SCREEN_HEIGHT],
+            display: [false; SCREEN_WIDTH * SCREEN_HEIGHT].to_vec(),
             delay_timer: 0,
             sound_timer: 0,
             old,
@@ -62,18 +66,23 @@ impl Chip8Engine {
         result
     }
 
-    pub fn load_rom(&mut self, data: &[u8]) {
+    fn load_bytes(&mut self, data: &[u8]) {
         for (offset, byte) in (0x200..).zip(data.iter()) {
             self.memory[offset] = *byte;
         }
     }
 
-    pub fn tick(&mut self) -> Result<bool, Error> {
+    pub fn load_rom(&mut self, path: &str) {
+        let mut file = File::open(path).unwrap();
+        let mut buffer: Vec<u8> = Vec::new();
+        file.read_to_end(&mut buffer).unwrap();
+
+        self.load_bytes(&buffer);
+    }
+
+    pub fn tick(&mut self) -> Result<bool, String> {
         if self.program_counter >= 4094 {
-            return Err(Error::new(
-                ErrorKind::OutOfMemory,
-                "Program Counter tried to go over allowed memory limit",
-            ));
+            return Err("Program Counter tried to go over allowed memory limit".to_string());
         }
 
         let byte1: u8 = self.memory[self.program_counter as usize];
@@ -91,7 +100,7 @@ impl Chip8Engine {
         match (n1, n2, n3, n4) {
             // 00E0 - clear screen
             (0x0, 0x0, 0xE, 0x0) => {
-                self.display = [[false; 64]; 32];
+                self.display = [false; SCREEN_WIDTH * SCREEN_HEIGHT].to_vec();
                 self.draw = true;
             }
 
@@ -293,11 +302,13 @@ impl Chip8Engine {
                             break;
                         }
 
-                        if self.display[curr_y as usize][curr_x as usize] && curr_bit {
-                            self.display[curr_y as usize][curr_x as usize] = false;
+                        let curr_2darr_index: usize = (curr_y as u16 * SCREEN_WIDTH as u16 + curr_x as u16) as usize;
+
+                        if self.display[curr_2darr_index] && curr_bit {
+                            self.display[curr_2darr_index] = false;
                             self.registers[0xF] = 1;
-                        } else if !self.display[curr_y as usize][curr_x as usize] && curr_bit {
-                            self.display[curr_y as usize][curr_x as usize] = true;
+                        } else if !self.display[curr_y as usize] && curr_bit {
+                            self.display[curr_2darr_index] = true;
                         }
                     }
                 }
@@ -405,10 +416,66 @@ impl Chip8Engine {
 
             _ => {
                 let err_msg: String = format!("Unknown instruction: {:04X}", instruction);
-                return Err(Error::new(ErrorKind::NotFound, err_msg));
+                return Err(err_msg);
             }
         }
 
         Ok(true)
     }
+}
+
+#[wasm_bindgen]
+impl Chip8Engine {
+    pub fn press_key(&mut self, key: usize) {
+        if key < 16 {
+            self.keyboard[key] = true;
+        }
+    }
+
+    pub fn release_key(&mut self, key: usize) {
+        if key < 16 {
+            self.keyboard[key] = false;
+        }
+    }
+
+    pub fn set_key_pressed(&mut self, key: u8) {
+        self.key_pressed = (true, key);
+    }
+
+    pub fn clear_key_pressed(&mut self) {
+        self.key_pressed.0 = false;
+    }
+
+    pub fn get_delay_timer(&self) -> u8 {
+        self.delay_timer
+    }
+
+    pub fn set_delay_timer(&mut self, value: u8) {
+        self.delay_timer = value;
+    }
+
+    pub fn get_sound_timer(&self) -> u8 {
+        self.sound_timer
+    }
+
+    pub fn set_sound_timer(&mut self, value: u8) {
+        self.sound_timer = value;
+    }
+
+    pub fn get_draw_flag(&self) -> bool {
+        self.draw
+    }
+
+    pub fn reset_draw_flag(&mut self) {
+        self.draw = false;
+    }
+
+    pub fn is_old(&self) -> bool {
+        self.old
+    }
+
+    pub fn get_display(&self) -> Vec<u8> {
+        self.display.iter().map(|&pixel| if pixel {1} else {0}).collect()
+    }
+
 }
