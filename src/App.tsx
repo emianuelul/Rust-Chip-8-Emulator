@@ -30,7 +30,7 @@ export function App() {
 
   const SCREEN_WIDTH = 64;
   const SCREEN_HEIGHT = 32;
-  const CANVAS_MULTIPLIER = 10;
+  const CANVAS_MULTIPLIER = 17;
 
   const oldEngine = false;
 
@@ -58,7 +58,8 @@ export function App() {
       };
 
     const startEmulator = async () => {
-      await init("/Rust-Chip-8-Emulator/rust_test_bg.wasm");
+      // await init("/Rust-Chip-8-Emulator/rust_test_bg.wasm");
+      await init("/rust_test_bg.wasm");
       
       engineRef.current = Chip8Engine.new(oldEngine);
 
@@ -181,7 +182,7 @@ export function App() {
   
 
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "50px", flexDirection: "column" }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "90vh", flexDirection: "column", gap: "4rem" }}>
       <canvas ref={canvasRef} style={{ border: "2px solid black" }}></canvas>
       
       <input type="file" accept=".ch8" onChange={handleFileUpload} />
