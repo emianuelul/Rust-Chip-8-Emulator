@@ -371,9 +371,9 @@ impl Chip8Engine {
             //        ex.: If VX contains 156 (0x9C), it would store 1 inside I, 5 in I+1, 6 in I+2
             (0xF, _, 0x3, 0x3) => {
                 let number: u8 = self.registers[n2 as usize];
-                self.memory[self.index as usize] = number / 100;
-                self.memory[(self.index + 1) as usize] = (number % 100) / 10;
-                self.memory[(self.index + 2) as usize] = number % 10;
+                self.memory[(self.index as usize) % 4096] = number / 100;
+                self.memory[((self.index + 1) % 4096) as usize] = (number % 100) / 10;
+                self.memory[((self.index + 2) % 4096) as usize] = number % 10;
             }
 
             // FX55 - every value from V0 to VX (inclusive) will be stored in memory, starting from I
@@ -383,36 +383,27 @@ impl Chip8Engine {
                     let vars = &self.registers[0x0..(n2 + 1) as usize];
 
                     for value in vars.iter() {
-                        self.memory[self.index as usize] = *value;
+                        self.memory[(self.index % 4096) as usize] = *value;
                         self.index += 1;
                     }
                 } else {
                     let vars = &self.registers[0x0..(n2 + 1) as usize];
 
                     for (offset, value) in (self.index..).zip(vars.iter()) {
-                        self.memory[offset as usize] = *value;
+                        self.memory[(offset % 4096) as usize] = *value;
                     }
                 }
             }
 
             // FX65 - takes X values from memory and stores into their respective register, starting from I
             (0xF, _, 0x6, 0x5) => {
-                // old increments I, new ones don't
+                for i in 0..=n2 {
+                    let addr = ((self.index + i as u16) % 4096) as usize;
+                    self.registers[i as usize] = self.memory[addr];
+                }
+
                 if self.old {
-                    let vars =
-                        &self.memory[self.index as usize..(self.index + (n2 + 1) as u16) as usize];
-
-                    for (index, value) in vars.iter().enumerate() {
-                        self.registers[index] = *value;
-                        self.index += 1;
-                    }
-                } else {
-                    let vars =
-                        &self.memory[self.index as usize..(self.index + (n2 + 1) as u16) as usize];
-
-                    for (index, value) in vars.iter().enumerate() {
-                        self.registers[index] = *value;
-                    }
+                    self.index += (n2 as u16) + 1;
                 }
             }
 

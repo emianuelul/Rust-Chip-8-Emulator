@@ -44,6 +44,7 @@ export function App() {
         const value = keymap[e.key];
         if (value === undefined) return;
         engineRef.current?.press_key(value);
+        engineRef.current?.set_key_pressed(value);
       }
 
       const handleKeyUp = (e: KeyboardEvent) => {

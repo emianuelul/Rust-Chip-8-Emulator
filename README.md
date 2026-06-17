@@ -9,10 +9,12 @@ User can load their own games in the emulator, but only COSMAC VIP, DREAM 6800, 
 Might return later and implement SUPER-CHIP-48 support later.
 
 # Known issues:
-- Emulator sometimes crashes
+
+- Emulator may sometimes crash
 - Pressing the escape key prompts an error, simply just refresh the page
 
 # What I learned
+
 - Basic idea of how an emulator is written
 - Rust
 - Tried to apply SOLID principles when writing stuff
@@ -23,6 +25,6 @@ Might return later and implement SUPER-CHIP-48 support later.
 - https://tobiasvl.github.io/blog/write-a-chip-8-emulator/#8xy0-set
 - http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 
-*AI was used in this project only for asking questions about stuff I didn't understand.
+\*AI was used in this project only for asking questions about stuff I didn't understand.
 
-*AI was used to implement the audio web API thing, that was not the main focus of this project
+\*AI was used to implement the audio web API thing, that was not the main focus of this project
