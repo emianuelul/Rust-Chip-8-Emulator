@@ -4,6 +4,14 @@ Personal project done as a way to regain my familiarity with Rust and to prepare
 
 Chip-8 Emulator written 100% in Rust that runs in the browser through WebAssembly. Basic React frontend.
 
+User can load their own games in the emulator, but only COSMAC VIP, DREAM 6800, and ETI 660 compatible games.
+
+Might return later and implement SUPER-CHIP-48 support later.
+
+# Known issues:
+- Emulator sometimes crashes
+- Pressing the escape key prompts an error, simply just refresh the page
+
 # What I learned
 - Basic idea of how an emulator is written
 - Rust
