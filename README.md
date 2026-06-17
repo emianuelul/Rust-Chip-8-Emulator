@@ -2,6 +2,13 @@
 
 Personal project done as a way to regain my familiarity with Rust and to prepare for my Bachelor's final project - a GBA Emulator.
 
+Chip-8 Emulator written 100% in Rust that runs in the browser through WebAssembly. Basic React frontend.
+
+# What I learned
+- Basic idea of how an emulator is written
+- Rust
+- Tried to apply SOLID principles when writing stuff 
+
 # Resources
 
 - https://tobiasvl.github.io/blog/write-a-chip-8-emulator/#8xy0-set
