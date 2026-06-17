@@ -16,4 +16,5 @@ Chip-8 Emulator written 100% in Rust that runs in the browser through WebAssembl
 - http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 
 *AI was used in this project only for asking questions about stuff I didn't understand.
+
 *AI was used to implement the audio web API thing, that was not the main focus of this project
