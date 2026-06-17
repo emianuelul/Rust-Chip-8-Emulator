@@ -30,7 +30,7 @@ export function App() {
 
   const SCREEN_WIDTH = 64;
   const SCREEN_HEIGHT = 32;
-  const CANVAS_MULTIPLIER = 17;
+  const CANVAS_MULTIPLIER = 17  ;
 
   const oldEngine = false;
 
