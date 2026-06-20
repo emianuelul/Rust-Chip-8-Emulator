@@ -8,6 +8,18 @@ User can load their own games in the emulator, but only COSMAC VIP, DREAM 6800, 
 
 Might return later and implement SUPER-CHIP-48 support later.
 
+# How To Use
+- Import Chip-8 Game through the attached button
+- Play the game:
+    - Controls:
+
+     ORIGINAL              Modern Keyboard
+|---|---|---|---|         |---|---|---|---|
+| 1 | 2 | 3 | C |         | 1 | 2 | 3 | 4 | 
+| 4 | 5 | 6 | D | ----->  | Q | W | E | R | 
+| 7 | 8 | 9 | E |         | A | S | D | F |
+| A | 0 | B | F |         | Z | X | C | V |
+
 # Known issues:
 
 - Emulator may sometimes crash
