@@ -135,18 +135,15 @@ export function App() {
           const engineDisplay = engineRef.current.get_display();
           
           if(ctx){
-            ctx.fillStyle = "#000000";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = "#FFFFFF";
-
             for(let i = 0; i < engineDisplay.length; i++){
+              const y = Math.floor(i / SCREEN_WIDTH) * CANVAS_MULTIPLIER;
+              const x = (i % SCREEN_WIDTH) * CANVAS_MULTIPLIER;
               if (engineDisplay[i] == 1) {
-                const y = Math.floor(i / SCREEN_WIDTH) * CANVAS_MULTIPLIER;
-                const x = (i % SCREEN_WIDTH) * CANVAS_MULTIPLIER;
-                
-                ctx.fillRect(x, y, CANVAS_MULTIPLIER, CANVAS_MULTIPLIER);
+                ctx.fillStyle = "#FFFFFF";
+              } else { 
+                ctx.fillStyle = "#000000";
               }
+              ctx.fillRect(x, y, CANVAS_MULTIPLIER, CANVAS_MULTIPLIER);
             }
           }
           
